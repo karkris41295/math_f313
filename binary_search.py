@@ -16,8 +16,10 @@ def inspect():
     plt.plot(a,b)
     plt.show()
     
-x1, x2 = -2, 1.5 #bracket values (x1,x2) = (-2,1.5)
-error = 10**-6 #permissible error
+x1, x2 = -2, 1.5 # bracket values (x1,x2) = (-2,1.5)
+error = 10**-6 # permissible error
+
+i = 1 # iteration counter
 
 while abs(x1-x2)>error:
     x3 = .5 * (x1+x2)
@@ -25,7 +27,9 @@ while abs(x1-x2)>error:
         x2 = x3
     elif f(x2)*f(x3) < 0:
         x1 = x3
-
-rt = 0.5 * (x1 + x2)      
-print 'The root of the equation is ' + str(rt)
-print 'f(root) = ' + str(f(rt))
+    i+=1 
+    
+rt = 0.5 * (x1 + x2) # estimated root of the equation
+      
+print 'The root of the equation is ' + str(rt) + '\n' + 'f(root) = ' + str(f(rt))
+print 'No. of iterations: ' + str(i)
