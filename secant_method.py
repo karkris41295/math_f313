@@ -9,9 +9,10 @@ def f(x):
 x1, x2 = -2., 1.5 # bracket values (x1,x2) = (-2,1.5)
 error = 1e-6 # permissible error
 
-i = 1 # iteration counter
+i = 0 # iteration counter
+x3 = 3
 
-while abs(x1-x2)>error:
+while abs(x2-x1)>error:
     x3 = x2 - (f(x2)*(x2-x1))/(f(x2)-f(x1)) # secant formula
     x1, x2 = x2, x3 # updating values for next iteration
     i+=1
