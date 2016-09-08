@@ -24,6 +24,11 @@ def improve(i, x1):
     Function which optionally uses the improved newton method
     
     Takes 1 argument, if 'True', uses the improved method, else uses the regular method
+    
+    (comment: not sure about this but I think the improved method is not suitable
+              if we're interested in finding certain roots in certain intervals
+              it tends to overshoot to an 'unwanted' root due tp high rate of 
+              convergence')
     '''
     if i == False:
         return f(x1)/d_dtf(x1)
