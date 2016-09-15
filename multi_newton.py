@@ -26,8 +26,9 @@ def gradf(x):
     n-Derivative of f(x) where x is a vector of n-dimensions
     '''
     v1, v2 = x[0], x[1]
-    m = np.array([[1./r1 + 1./r2 + (i/vt)*e**((v1-v2)/vt), (-i/vt)*e**((v1-v2)/vt)],\
-    [(i/vt)*e**((v1-v2)/vt), -1*(1./r3 +1./r4 +(i/vt)*e**((v1-v2)/vt))]], dtype = np.float64)#the matrix for the 'grad' f function
+    m = np.array([[1./r1 + 1./r2 + (i/vt)*e**((v1-v2)/vt), (i/vt)*e**((v1-v2)/vt)],\
+    [(-i/vt)*e**((v1-v2)/vt), -1*(1./r3 +1./r4 +(i/vt)*e**((v1-v2)/vt))]], dtype = np.float64)#the matrix for the 'grad' f function
+    print m
     return m
 
 def cls_newton(x):
@@ -45,19 +46,20 @@ def cls_newton(x):
     
     print f
     print g
-    print f_v2, g_v1, g_v1, f_v1
+    print f_v2, g_v1, g_v1, f_v1  
     v1n = v1 - (f*g_v2 - g*f_v2)/(f_v1*g_v2 - g_v1*f_v2)
     v2n = v2 - (g*f_v1 - f*g_v1)/(f_v1*g_v2 - g_v1*f_v2)
     print v1n
     print v2n
     return np.array([v1n,v2n])
 
-x1 = np.array([4, 5]) #initial guess of roots are 1 and 1 volts
+x1 = np.array([4., 5.]) #initial guess of roots are 1 and 1 volts
 error = 1e-6 # permissible error
 i = 0 # iteration counter
 
 while norm(x1)>error and i < 50:
-    x2 = cls_newton(x1)
+    delta = solve(gradf(x1), f(x1))
+    x2 = x1 - delta
     print x2
     print 'x1 = {0}, x2 = {1}'.format(x1, x2)# test line
     x1 = x2
