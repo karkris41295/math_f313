@@ -15,9 +15,9 @@ def phi(x):
     Note: phi(x) should be such that |dphi(x)/dx| < 1 
     Here it is so.
     '''
-    return 10/sqrt(x+1)
+    return 10./sqrt(x+1)
 
-x1 = 8 # initial guess
+x1 = -.5 # initial guess
 error = 1e-6 # permissible error
 
 i = 0 # iteration counter
