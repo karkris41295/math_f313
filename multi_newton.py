@@ -22,7 +22,7 @@ ki = lambdify([v1, v2], f, 'numpy') # function which subs v1, v2 in kirchoffs eq
 gradf = lambdify([v1, v2], J, 'numpy') # function which subs v1, v2 in Jacobian
 
 x = array([1., 5.]) # initial guess for v1 and v2
-error = 1e-6 # permissible error
+error = 1e-8 # permissible error
 i = 0 # iteration counter
 
 while norm(ki(x[0], x[1]))>error and i < 50:
@@ -35,5 +35,5 @@ while norm(ki(x[0], x[1]))>error and i < 50:
     
 rt = x # estimated root of the equation
       
-print 'The root of the equation is ',  rt , '\nf(root) = ', ki(rt[0], rt[1])
+print 'The root of the equation is ',  rt , '\nf(root) = ', ki(rt[0], rt[1]).T[0]
 print 'No. of iterations: ' + str(i)
