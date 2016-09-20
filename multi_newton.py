@@ -2,71 +2,41 @@
 #MATH F313: Numerical Analysis
 #Exercise 6.17: Nonlinear circuits in Mark Newman's 'Computational Physics'
 
-import numpy as np
-from numpy.linalg import solve, norm
-from math import e
+from sympy import Matrix, lambdify, symbols, E
+from numpy.linalg import norm, solve
+from numpy import array
+
+v1, v2 = symbols('v1 v2')
 
 #DATA
 vp= 5. #V_plus in volts
-r1, r2, r3, r4 = 1., 4., 3., 2. #k-ohm resistances
-i = 3. #A constant originally in nA
+r1, r2, r3, r4 = 1e3, 4e3 , 3e3, 2e3  #ohm, data in kilo-ohm
+i = 3e-9 #A constant, data originally in nA
 vt = 0.05 #V_t in volts
 
-def f(x):
-    '''
-    evaluates f(x) for where x is a 2-dim vector of voltage v1 and v2
-    '''
-    v1, v2 = x[0], x[1]
-    y = np.array([(v1-vp)/r1 + v1/r2 + i*(e**((v1-v2)/vt)-1), (vp-v2)/r3 - v2/r4 + i*(e**((v1-v2)/vt)-1)])
-    print y
-    return y
-    
-def gradf(x):
-    '''
-    n-Derivative of f(x) where x is a vector of n-dimensions
-    '''
-    v1, v2 = x[0], x[1]
-    m = np.array([[1./r1 + 1./r2 + (i/vt)*e**((v1-v2)/vt), (i/vt)*e**((v1-v2)/vt)],\
-    [(-i/vt)*e**((v1-v2)/vt), -1*(1./r3 +1./r4 +(i/vt)*e**((v1-v2)/vt))]], dtype = np.float64)#the matrix for the 'grad' f function
-    print m
-    return m
+f = Matrix([(v1-vp)/r1 + v1/r2 + i*(E**((v1-v2)/vt)-1), (vp-v2)/r3 - v2/r4 + i*(E**((v1-v2)/vt)-1)]) # defines f(x)
+wrt = Matrix([v1, v2]) # ordering matrix to calculate the jacobian
+J = f.jacobian(wrt) # Jacobian matrix for f(x)
 
-def cls_newton(x):
-    '''
-    Classroom implementation of the newton raphson method
-    '''
-    v1, v2 = x[0], x[1]
-    f_v1 = 1./r1 + 1./r2 + (i/vt)*e**((v1-v2)/vt)
-    f_v2 = (-i/vt)*e**((v1-v2)/vt)
-    g_v1 = (i/vt)*e**((v1-v2)/vt)
-    g_v2 = -1*(1./r3 +1./r4 +(i/vt)*e**((v1-v2)/vt))
-    
-    f = (v1-vp)/r1 + v1/r2 + i*(e**((v1-v2)/vt)-1)
-    g = (vp-v2)/r3 - v2/r4 + i*(e**((v1-v2)/vt)-1)
-    
-    print f
-    print g
-    print f_v2, g_v1, g_v1, f_v1  
-    v1n = v1 - (f*g_v2 - g*f_v2)/(f_v1*g_v2 - g_v1*f_v2)
-    v2n = v2 - (g*f_v1 - f*g_v1)/(f_v1*g_v2 - g_v1*f_v2)
-    print v1n
-    print v2n
-    return np.array([v1n,v2n])
+ki = lambdify([v1, v2], f, 'numpy') # function which subs v1, v2 in kirchoffs equation
+gradf = lambdify([v1, v2], J, 'numpy') # function which subs v1, v2 in Jacobian
 
-x1 = np.array([4., 5.]) #initial guess of roots are 1 and 1 volts
+x = array([1., 1.]) # initial guess for v1 and v2
 error = 1e-6 # permissible error
 i = 0 # iteration counter
 
-while norm(x1)>error and i < 50:
-    delta = solve(gradf(x1), f(x1))
-    x2 = x1 - delta
-    print x2
-    print 'x1 = {0}, x2 = {1}'.format(x1, x2)# test line
-    x1 = x2
-    print x1
+while norm(x)>error and i < 50:
+    v1, v2 = x[0], x[1]
+    delta = solve(gradf(v1, v2), ki(v1, v2))
+    print delta
+    x_n = x - delta
+    print x_n
+    print 'x = {0}, v_n = {1}'.format(x, x_n)# test line
+    x = x_n
+    print x
     i+=1 
     
-rt = x1 # estimated root of the equation
+rt = x # estimated root of the equation
       
 print 'The root of the equation is ' + str(rt) + '\n' + 'f(root) = ' + str(f(rt))
 print 'No. of iterations: ' + str(i)

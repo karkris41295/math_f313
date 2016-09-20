@@ -24,7 +24,7 @@ while abs(f(x3))>error:
     b = a*h1 + d1
     c = f(x2)
     rad = (b**2 - 4*a*c)**.5 # calculating discriminant of a**2 + bx + c
-    if abs(b+rad) > abs(b-rad):#checking for the larger denominator to get x3 closer ot x2
+    if abs(b+rad) > abs(b-rad):# checking for the larger denominator to get x3 closer to x2
         den = b+rad
     else:
         den = b-rad  # den is the denominator of the quadritic root formula
