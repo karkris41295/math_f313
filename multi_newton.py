@@ -21,22 +21,19 @@ J = f.jacobian(wrt) # Jacobian matrix for f(x)
 ki = lambdify([v1, v2], f, 'numpy') # function which subs v1, v2 in kirchoffs equation
 gradf = lambdify([v1, v2], J, 'numpy') # function which subs v1, v2 in Jacobian
 
-x = array([1., 1.]) # initial guess for v1 and v2
+x = array([1., 5.]) # initial guess for v1 and v2
 error = 1e-6 # permissible error
 i = 0 # iteration counter
 
-while norm(x)>error and i < 50:
+while norm(ki(x[0], x[1]))>error and i < 50:
     v1, v2 = x[0], x[1]
     delta = solve(gradf(v1, v2), ki(v1, v2))
-    print delta
-    x_n = x - delta
-    print x_n
-    print 'x = {0}, v_n = {1}'.format(x, x_n)# test line
-    x = x_n
-    print x
+    x_n = x - delta.T[0] # transposing and taking the first row of delta to match dim(x)
+    print 'x_n at {0}'.format(i), ' iteration', x_n
+    x = x_n    
     i+=1 
     
 rt = x # estimated root of the equation
       
-print 'The root of the equation is ' + str(rt) + '\n' + 'f(root) = ' + str(f(rt))
+print 'The root of the equation is ',  rt , '\nf(root) = ', ki(rt[0], rt[1])
 print 'No. of iterations: ' + str(i)
