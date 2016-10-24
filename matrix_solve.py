@@ -73,7 +73,6 @@ def gauss_pp(A,b):
         for n in range(m, N):
             if Ab[n,m] == lrg:
                 Ab[[m,n]] = Ab[[n,m]]
-        print Ab
                          
         # Divide by the diagonal element
         div = Ab[m,m]
