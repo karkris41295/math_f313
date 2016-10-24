@@ -3,7 +3,7 @@
 
 import numpy as np
 
-A = np.array([[ 2,  1,  4,  1 ],
+A = np.array([[ 0,  1,  4,  1 ],
            [ 3,  4, -1, -1 ],
            [ 1, -4,  1,  5 ],
            [ 2, -2,  1,  3 ]], float)
@@ -31,14 +31,14 @@ def gauss(A, b):
     Ab = np.column_stack((A,b))  # Creating an augmented Matrix
     for m in range(N):
         
-        # Divide by the diagonal element
-        div = Ab[m,m]
-        Ab[m,:] /= div
-        
         # Now subtract from the lower rows
         for i in range(m+1,N):
             mult = Ab[i,m]
             Ab[i,:] -= mult*Ab[m,:]
+            
+        # Divide by the diagonal element
+        div = Ab[m,m]
+        Ab[m,:] /= div
             
     # Converting to RREF
     for m in range(N-1,-1,-1):
@@ -47,7 +47,7 @@ def gauss(A, b):
         
     return Ab[:,N] #Returns last column of augmented matrix
     
-def gauss_pp():
+def gauss_pp(A,b):
     """
     Solves matrices using Gaussian Elimination with partial pivoting
     
@@ -68,6 +68,13 @@ def gauss_pp():
     Ab = np.column_stack((A,b))  # Creating an augmented Matrix
     for m in range(N):
         
+        # Finding largest element in column and swapping rows
+        lrg = np.amax(abs(Ab[:,m]))
+        for n in range(m, N):
+            if Ab[n,m] == lrg:
+                Ab[[m,n]] = Ab[[n,m]]
+        print Ab
+                         
         # Divide by the diagonal element
         div = Ab[m,m]
         Ab[m,:] /= div
