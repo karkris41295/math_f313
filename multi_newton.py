@@ -21,7 +21,7 @@ J = f.jacobian(wrt) # Jacobian matrix for f(x)
 ki = lambdify([v1, v2], f, 'numpy') # function which subs v1, v2 in kirchoffs equation
 gradf = lambdify([v1, v2], J, 'numpy') # function which subs v1, v2 in Jacobian
 
-x = array([1., 5.]) # initial guess for v1 and v2
+x = array([3.5, 2.8]) # initial guess for v1 and v2
 error = 1e-8 # permissible error
 i = 0 # iteration counter
 
